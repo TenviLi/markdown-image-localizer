@@ -1,0 +1,56 @@
+{
+    "name": "img-localizer",
+    "version": "0.1.0",
+    "description": "fastly list or localize the markdown images",
+    "engines": {
+        "node": "^7.8.0",
+        "npm": "^4.5.0"
+    },
+    "main": "lib.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gylidian/markdown-image-localizer.git"
+    },
+    "keywords": [
+        "download",
+        "downloader",
+        "image",
+        "image-localizer",
+        "img",
+        "img-localizer",
+        "localize",
+        "localizer",
+        "markdown",
+        "markdown-image",
+        "markdown-image-localizer",
+        "md",
+        "url"
+    ],
+    "author": "gylidian",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/gylidian/markdown-image-localizer/issues"
+    },
+    "homepage": "https://github.com/gylidian/markdown-image-localizer#readme",
+    "dependencies": {
+        "image-download": "^1.1.0",
+        "image-type": "^3.0.0",
+        "list-filepaths": "^1.6.5",
+        "shortid": "^2.2.14"
+    },
+    "devDependencies": {
+        "jest": "^24.0.0"
+    },
+    "jest": {
+        "bail": true,
+        "collectCoverage": true,
+        "coveragePathIgnorePatterns": [
+            "<rootDir>/coverage/",
+            "<rootDir>/__fixtures__/",
+            "<rootDir>/node_modules/"
+        ]
+    }
+}
