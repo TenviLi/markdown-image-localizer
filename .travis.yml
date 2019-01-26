@@ -12,12 +12,13 @@ node_js:
   - "10"
   - "9"
 
+install:
+  - npm install
+
 script:
   - npm run test
 
-install:
-  - npm
-
 cache:
+  yarn: false
   directories:
     - node_modules
