@@ -15,6 +15,9 @@ node_js:
 script:
   - npm run test
 
+install:
+  - npm
+
 cache:
   directories:
     - node_modules
