@@ -8,6 +8,8 @@ yarn.lock
 TODOs.md
 .github
 .idea
+.travis.yml
+.coveralls.yml
 
 # CI related
 scripts
