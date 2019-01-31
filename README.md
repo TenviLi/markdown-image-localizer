@@ -4,7 +4,7 @@
 
 > 🖼️Fastly list or localize the images in markdown
 
-[![效果图](https://github.com/gylidian/markdown-image-localizer/blob/master/example/illustration.png)](https://github.com/gylidian/markdown-image-localizer)
+[![效果图](https://raw.githubusercontent.com/gylidian/markdown-image-localizer/master/example/illustration.png)](https://github.com/gylidian/markdown-image-localizer)
 
 It has these features:
 
