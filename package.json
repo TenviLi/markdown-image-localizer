@@ -1,12 +1,15 @@
 {
     "name": "img-localizer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "fastly list or localize the markdown images",
     "engines": {
         "node": "^7.8.0",
         "npm": "^4.5.0"
     },
-    "main": "lib.js",
+    "main": "index.js",
+    "bin": {
+        "imgloc": "bin.js"
+    },
     "scripts": {
         "test": "jest"
     },
@@ -27,7 +30,14 @@
         "markdown-image",
         "markdown-image-localizer",
         "md",
-        "url"
+        "url",
+        "cli",
+        "command",
+        "imgloc",
+        "image-downloader",
+        "image-download",
+        "img-downloader",
+        "img-download"
     ],
     "author": "gylidian",
     "license": "MIT",
@@ -36,10 +46,18 @@
     },
     "homepage": "https://github.com/gylidian/markdown-image-localizer#readme",
     "dependencies": {
-        "image-download": "^1.1.0",
+        "commander": "^2.19.0",
         "image-type": "^3.0.0",
+        "is-relative": "^1.0.0",
+        "is-relative-url": "^2.0.0",
         "list-filepaths": "^1.6.5",
-        "shortid": "^2.2.14"
+        "p-map": "^2.0.0",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.5",
+        "shortid": "^2.2.14",
+        "sleep-promise": "^8.0.1",
+        "valid-path": "^1.0.0",
+        "valid-url": "^1.0.9"
     },
     "devDependencies": {
         "jest": "^24.0.0"

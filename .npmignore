@@ -10,6 +10,9 @@ TODOs.md
 .idea
 .travis.yml
 .coveralls.yml
+example/illustration.png
+example/assets
+.vscode
 
 # CI related
 scripts

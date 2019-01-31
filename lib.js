@@ -1,159 +1,56 @@
-const fs = require("fs");
 const path = require("path");
-const shortid = require("shortid");
+const url = require("url");
+const request = require("request-promise-native");
 const imageType = require("image-type");
-const imageDownload = require("image-download");
-const listFilepaths = require("list-filepaths");
+const shortid = require("shortid");
+const fs = require("fs");
 
-const mdimgrp = /!\[.*?\]\((.*?)\)/g,
-    imgurlrp = /!\[.*?\]\((.*?)\)/;
+exports.equativePath = (filePath, relativePath = "") => {
+    return path.resolve(filePath, "..", relativePath);
+};
+exports.checkRelative = link => require("is-relative-url")(link); //|| require("is-relative")(link);
+exports.checkValid = link => require("valid-url").isUri(link) || require("valid-path")(link);
+exports.downloader = async function(imgUrl, downloadPath, options = {}) {
+    try {
+        // 图片名处理
+        const urlPathname = url.parse(imgUrl).pathname,
+            hasExtName = path.extname(urlPathname);
+        let basename = path.basename(urlPathname);
+        // 是否覆盖同名图片（对无后缀图片暂时无解）
+        if (!options.cover && hasExtName && fs.existsSync(path.join(downloadPath, basename)))
+            return;
 
-class imgLocalizer {
-    /**
-     * constructor
-     * @todo support for `timeout` and `maxRedirects`
-     */
-    constructor() {
-        this.stack = [];
-    }
-
-    /**
-     * Returns a new object of `imgLocalizer` class
-     * @description In external references, without initialization can access the methods in this class
-     */
-    static init() {
-        return new imgLocalizer();
-    }
-
-    /**
-     * Find and return image links in markdown
-     * @param {string} content markdown plain text
-     * @todo `options` with the following parameters
-     * - `options.filterate` Whether to filter out local image links
-     * - `options.baseUrl` When relative paths are encountered, this url will be used to join
-     * - `options.responsity` Special `options.baseUrl` for GitHub repositories such as `gylidian/string-once-split`.
-     * As for the other git hosting platform warehouse can only use the `options.baseUrl`
-     * @todo Let `content` support Buffer
-     */
-    static find(content) {
-        if (typeof content !== "string") throw new TypeError("content passed is not a string!");
-
-        let result = [],
-            match;
-        while ((match = mdimgrp.exec(content)) != null) {
-            let link = imgurlrp.exec(match[0]);
-            if (link) link = link[1];
-
-            result.push(link);
-        }
-
-        return result;
-    }
-
-    /**
-     * Parsing markdown text as `dirImgObj`
-     * @param {string} content markdown plain text
-     * @param {string} defaultPath A default image download path must be specified
-     */
-    async extract(content, defaultPath = path.resolve(__dirname + "assets")) {
-        let urlObj = [];
-        urlObj.push({
-            path: defaultPath,
-            image: imgLocalizer.find(content)
+        const res = await request({
+            method: "GET",
+            uri: imgUrl,
+            resolveWithFullResponse: true,
+            encoding: null // 返回binary格式数据
         });
-        stack = urlObj;
-        return this;
-    }
 
-    /**
-     * List the pathnames of all markdown files in the directory
-     * @param {string} path pathname containing markdown file
-     * @returns {Array} A One-Dimensional Array of Path Names
-     * @todo `options.depth` specifies the depth of the generated directory tree
-     */
-    static async listMdPath(path, options = {}) {
-        options.filter = /.*\.md$/;
-        const dirArr = await listFilepaths(path, options);
-        return Promise.resolve(dirArr);
-    }
+        if (res.body && (res.statusCode === 200 || res.statusCode === 201)) {
+            // 如果url没有文件后缀名，则加上后缀
+            if (!hasExtName) basename = basename + "." + imageType(res.body).ext;
+            // 如果存在同名图片，则改名
+            if (fs.existsSync(path.join(downloadPath, basename)))
+                basename = shortid.generate() + "-" + basename;
 
-    /**
-     * Resolve image links in all markdown files in the path as `dirImgObj`
-     * @param {string} path pathname containing markdown file
-     */
-    async extractDir(path) {
-        // TODO: check is-path & check is-Stats-obj
-        let urlObj = [];
-        const dirArr = await imgLocalizer.listMdPath(path);
-
-        for (const dir of dirArr) {
-            const buffer = fs.readFileSync(dir);
-            const markdown = buffer.toString();
-            urlObj.push({
-                path: dir,
-                image: imgLocalizer.find(markdown) // TODO: check is-absolute/relative & join url & filter local-image
-            });
-        }
-
-        this.stack = urlObj;
-        return this;
-    }
-
-    /**
-     * get the existing `dirImgObj`
-     */
-    get() {
-        return this.stack ? this.stack : [];
-    }
-
-    /**
-     * Download all image links according to `dirImgObj` and replace them in the markdown source file
-     * @returns {dirImgObj} Return an `dirImgObj` after completion
-     * - key `image` means the image links successfully downloaded and replaced
-     * - key `error` means the image links unsuccessfully downloaded and replaced
-     * @todo `options.location` supports for replacing the default baseUrl of the image with the specified URL
-     * @todo To replace the picture link according to the markdown AST tree. Mainly to prevent the replacement of text with the same picture links
-     * @todo Failure handling
-     */
-    async down() {
-        const relative = "assets";
-
-        for (const item of this.stack) {
-            let markdown = fs.readFileSync(item.path).toString();
-            const pathname = path.resolve(
-                item.path.slice(0, item.path.lastIndexOf("\\") + 1),
-                relative
-            );
-            if (!fs.existsSync(pathname)) fs.mkdirSync(pathname);
-            let success = [],
-                error = [];
-            for (const url of item.image) {
-                try {
-                    const buffer = await imageDownload(url);
-                    const type = imageType(buffer);
-
-                    const filename = `${shortid.generate()}.${type.ext}`;
-                    // TODO: check filename-valid
-                    fs.writeFileSync(path.resolve(pathname, filename), buffer); // fs.createWriteStream
-
-                    markdown = markdown.replace(url, `../${relative}/${filename})`);
-
-                    success.push(filename);
-                } catch (err) {
-                    error.push(url);
-                    console.log(err);
+            fs.writeFileSync(path.join(downloadPath, basename), res.body, "binary", err => {
+                if (err) {
+                    throw new Error(`图片写入失败. URL: ${imgUrl}`);
                 }
+                // if (typeof done === "function") {
+                //     done(false, options.dest, res.body);
+                // }
+            });
+
+            return basename;
+        } else {
+            if (!res.body) {
+                throw new Error(`图片下载失败，empty body. URL: ${imgUrl}`);
             }
-            if (success.length) {
-                item.image = success;
-                fs.writeFileSync(item.path, markdown);
-            }
-            if (error.length) item.error = error;
+            throw new Error(`图片下载失败，${res.statusCode}. URL: ${imgUrl}`);
         }
-
-        return this.get();
+    } catch (err) {
+        console.error(err);
     }
-}
-
-exports.imgLocalizer = imgLocalizer;
-exports.imgLoc = imgLocalizer.init();
+};
