@@ -1,6 +1,6 @@
 {
     "name": "img-localizer",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "fastly list or localize the markdown images",
     "engines": {
         "node": "^7.8.0",
