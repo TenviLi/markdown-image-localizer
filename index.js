@@ -52,9 +52,9 @@ class imgLocalizer {
             if ((linkMatch = imgurlrp.exec(match[0])) != null) {
                 const link = linkMatch[1];
                 if (!util.checkValid(link)) continue;
-                if (!options.reserveLocal && util.checkRelative(link)) {
-                    if (fs.existsSync(path.join(options.imgPath, link))) continue;
-                }
+                if (!options.reserveLocal)
+                    if (util.checkRelative(link) && fs.existsSync(path.join(options.imgPath, link)))
+                        continue;
                 result.add(link);
             }
         }
@@ -139,6 +139,7 @@ class imgLocalizer {
                     options.onSuccess(++current, filename);
                 } catch (e) {
                     error.push(imgUrl);
+                    console.error(err);
                     options.onFailure(e);
                 }
             },
