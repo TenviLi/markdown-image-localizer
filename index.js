@@ -138,9 +138,19 @@ class imgLocalizer {
                     success[imgUrl] = `${options.imgPath}/${filename}`;
                     options.onSuccess(++current, filename);
                 } catch (e) {
-                    error.push(imgUrl);
-                    console.error(err);
-                    options.onFailure(e);
+                    try {
+                        let downloadUrl = util.checkRelative(imgUrl)
+                            ? path.join(baseUrl, imgUrl)
+                            : imgUrl;
+                        const filename = await util.downloader(downloadUrl, imgPath);
+                        if (options.timeout) await sleep(options.timeout);
+                        success[imgUrl] = `${options.imgPath}/${filename}`;
+                        options.onSuccess(++current, filename);
+                    } catch (e) {
+                        error.push(imgUrl);
+                        console.error(e);
+                        options.onFailure(e);
+                    }
                 }
             },
             { concurrency: options.concurrency }
