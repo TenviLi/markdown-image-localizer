@@ -44,8 +44,8 @@ class imgLocalizer {
   extract(markdown, options = {}) {
     if (!options.reserveLocal && !options.imgPath)
       throw new Error("必须指定options.imgPath");
-    const mdimgrp = /!\[.*?\]\((.*?)\)/g,
-      imgurlrp = /!\[.*?\]\((.*?)\)/;
+    const mdimgrp = /\!\[[\s\S]*\]\((.*?)\)/g,
+      imgurlrp = /\!\[[\s\S]*\]\((.*?)\)/;
     let result = new Set(),
       match;
     while ((match = mdimgrp.exec(markdown)) != null) {
