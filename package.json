@@ -1,80 +1,80 @@
 {
-    "name": "img-localizer",
-    "version": "0.2.2",
-    "description": "fastly list or localize the markdown images",
-    "engines": {
-        "node": "^7.8.0",
-        "npm": "^4.5.0"
-    },
-    "main": "index.js",
-    "bin": {
-        "imgloc": "bin.js"
-    },
-    "scripts": {
-        "test": "jest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/gylidian/markdown-image-localizer.git"
-    },
-    "keywords": [
-        "download",
-        "downloader",
-        "image",
-        "image-localizer",
-        "img",
-        "img-localizer",
-        "localize",
-        "localizer",
-        "markdown",
-        "markdown-image",
-        "markdown-image-localizer",
-        "md",
-        "url",
-        "cli",
-        "command",
-        "imgloc",
-        "image-downloader",
-        "image-download",
-        "img-downloader",
-        "img-download"
-    ],
-    "author": "gylidian",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/gylidian/markdown-image-localizer/issues"
-    },
-    "homepage": "https://github.com/gylidian/markdown-image-localizer#readme",
-    "dependencies": {
-        "commander": "^2.19.0",
-        "image-type": "^3.0.0",
-        "is-relative": "^1.0.0",
-        "is-relative-url": "^2.0.0",
-        "list-filepaths": "^1.6.5",
-        "p-map": "^2.0.0",
-        "request": "^2.88.0",
-        "request-promise-native": "^1.0.5",
-        "shortid": "^2.2.14",
-        "sleep-promise": "^8.0.1",
-        "valid-path": "^1.0.0",
-        "valid-url": "^1.0.9"
-    },
-    "devDependencies": {
-        "cz-conventional-changelog": "^3.0.2",
-        "jest": "^24.0.0"
-    },
-    "jest": {
-        "bail": true,
-        "collectCoverage": true,
-        "coveragePathIgnorePatterns": [
-            "<rootDir>/coverage/",
-            "<rootDir>/__fixtures__/",
-            "<rootDir>/node_modules/"
-        ]
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
-        }
+  "name": "img-localizer",
+  "version": "0.2.3",
+  "description": "fastly list or localize the markdown images",
+  "engines": {
+    "node": "^7.8.0",
+    "npm": "^4.5.0"
+  },
+  "main": "index.js",
+  "bin": {
+    "imgloc": "bin.js"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gylidian/markdown-image-localizer.git"
+  },
+  "keywords": [
+    "download",
+    "downloader",
+    "image",
+    "image-localizer",
+    "img",
+    "img-localizer",
+    "localize",
+    "localizer",
+    "markdown",
+    "markdown-image",
+    "markdown-image-localizer",
+    "md",
+    "url",
+    "cli",
+    "command",
+    "imgloc",
+    "image-downloader",
+    "image-download",
+    "img-downloader",
+    "img-download"
+  ],
+  "author": "gylidian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gylidian/markdown-image-localizer/issues"
+  },
+  "homepage": "https://github.com/gylidian/markdown-image-localizer#readme",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "image-type": "^3.0.0",
+    "is-relative": "^1.0.0",
+    "is-relative-url": "^2.0.0",
+    "list-filepaths": "^1.6.5",
+    "p-map": "^2.0.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "shortid": "^2.2.14",
+    "sleep-promise": "^8.0.1",
+    "valid-path": "^1.0.0",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.0.2",
+    "jest": "^24.0.0"
+  },
+  "jest": {
+    "bail": true,
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/coverage/",
+      "<rootDir>/__fixtures__/",
+      "<rootDir>/node_modules/"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
+  }
 }
