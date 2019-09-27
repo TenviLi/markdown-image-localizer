@@ -60,6 +60,7 @@
         "valid-url": "^1.0.9"
     },
     "devDependencies": {
+        "cz-conventional-changelog": "^3.0.2",
         "jest": "^24.0.0"
     },
     "jest": {
@@ -70,5 +71,10 @@
             "<rootDir>/__fixtures__/",
             "<rootDir>/node_modules/"
         ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }
