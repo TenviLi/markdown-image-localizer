@@ -6,48 +6,59 @@ const shortid = require("shortid");
 const fs = require("fs");
 
 exports.equativePath = (filePath, relativePath = "") => {
-    return path.resolve(filePath, "..", relativePath);
+  return path.resolve(filePath, "..", relativePath);
 };
 exports.checkRelative = link => require("is-relative-url")(link); //|| require("is-relative")(link);
-exports.checkValid = link => require("valid-url").isUri(link) || require("valid-path")(link);
+exports.checkValid = link =>
+  require("valid-url").isUri(link) || require("valid-path")(link);
 exports.downloader = async function(imgUrl, downloadPath, options = {}) {
-    // 图片名处理
-    const urlPathname = url.parse(imgUrl).pathname,
-        hasExtName = path.extname(urlPathname);
-    let basename = path.basename(urlPathname);
-    // 是否覆盖同名图片（对无后缀图片暂时无解）
-    // todo: 把这段代码转移到外面的pMap上面去
-    // todo: 明明extract图片链接的时候已经把相对和已存在图片滤掉了，为啥还会显示在命令行
-    if (!options.cover && hasExtName && fs.existsSync(path.join(downloadPath, basename))) return;
+  // 图片名处理
+  const urlPathname = url.parse(imgUrl).pathname,
+    hasExtName = path.extname(urlPathname);
+  let basename = path.basename(urlPathname);
+  // 是否覆盖同名图片（对无后缀图片暂时无解）
+  // todo: 把这段代码转移到外面的pMap上面去
+  // todo: 明明extract图片链接的时候已经把相对和已存在图片滤掉了，为啥还会显示在命令行
+  if (
+    !options.cover &&
+    hasExtName &&
+    fs.existsSync(path.join(downloadPath, basename))
+  )
+    return;
 
-    const res = await request({
-        method: "GET",
-        uri: imgUrl,
-        resolveWithFullResponse: true,
-        encoding: null // 返回binary格式数据
-    });
+  const res = await request({
+    method: "GET",
+    uri: imgUrl,
+    resolveWithFullResponse: true,
+    encoding: null // 返回binary格式数据
+  });
 
-    if (res.body && (res.statusCode === 200 || res.statusCode === 201)) {
-        // 如果url没有文件后缀名，则加上后缀
-        if (!hasExtName) basename = basename + "." + imageType(res.body).ext;
-        // 如果存在同名图片，则改名
-        if (fs.existsSync(path.join(downloadPath, basename)))
-            basename = shortid.generate() + "-" + basename;
+  if (res.body && (res.statusCode === 200 || res.statusCode === 201)) {
+    // 如果url没有文件后缀名，则加上后缀
+    if (!hasExtName) basename = basename + "." + imageType(res.body).ext;
+    // 如果存在同名图片，则改名
+    if (fs.existsSync(path.join(downloadPath, basename)))
+      basename = shortid.generate() + "-" + basename;
 
-        fs.writeFileSync(path.join(downloadPath, basename), res.body, "binary", err => {
-            if (err) {
-                throw new Error(`图片写入失败. URL: ${imgUrl}`);
-            }
-            // if (typeof done === "function") {
-            //     done(false, options.dest, res.body);
-            // }
-        });
-
-        return basename;
-    } else {
-        if (!res.body) {
-            throw new Error(`图片下载失败，empty body. URL: ${imgUrl}`);
+    fs.writeFileSync(
+      path.join(downloadPath, basename),
+      res.body,
+      "binary",
+      err => {
+        if (err) {
+          throw new Error(`图片写入失败. URL: ${imgUrl}`);
         }
-        throw new Error(`图片下载失败，${res.statusCode}. URL: ${imgUrl}`);
+        // if (typeof done === "function") {
+        //     done(false, options.dest, res.body);
+        // }
+      }
+    );
+
+    return basename;
+  } else {
+    if (!res.body) {
+      throw new Error(`图片下载失败，empty body. URL: ${imgUrl}`);
     }
+    throw new Error(`图片下载失败，${res.statusCode}. URL: ${imgUrl}`);
+  }
 };
